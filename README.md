@@ -1,4 +1,3 @@
-![logo](http://i.imgur.com/lVMTcfS.png)
 hikaYABEE fork from Yabee for adjustit to my workflow
 
 Diferences:
