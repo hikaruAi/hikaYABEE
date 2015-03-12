@@ -124,6 +124,11 @@ class YABEEProperty(bpy.types.PropertyGroup):
             default='./tex',
             )
             
+    opt_suffix = StringProperty(
+            name="suffix",
+            description="Apped a suffix to the name",
+            default="",
+            )###################
     opt_merge_actor = BoolProperty(
             name="Merge actor",
             description="Merge meshes, armatured by single Armature",
@@ -204,6 +209,7 @@ class YABEEProperty(bpy.types.PropertyGroup):
             layout.row().prop(self, 'opt_merge_actor')
             layout.row().prop(self, 'opt_apply_modifiers')
             layout.row().prop(self, 'opt_pview')
+            box.row().prop(self,"opt_suffix")#######
     
     def get_bake_dict(self):
         d = {}
@@ -259,6 +265,7 @@ class YABEEProperty(bpy.types.PropertyGroup):
         self.opt_separate_anim_files = True
         self.opt_anim_only = False
         self.opt_tex_path = './tex'
+        self.opt_suffix="" ##############
         self.opt_merge_actor = True
         self.opt_apply_modifiers = True
         self.opt_pview = False
@@ -354,7 +361,7 @@ class ExportSelectedPanda3DEGG(bpy.types.Operator, ExportHelper):
     filename_ext = ".egg"
 
     filter_glob = StringProperty(
-            default="*this_dont_matter.egg",
+            default="*.egg",
             options={'HIDDEN'},
             )
 
@@ -367,7 +374,7 @@ class ExportSelectedPanda3DEGG(bpy.types.Operator, ExportHelper):
         import imp
         imp.reload(egg_writer)
         sett = context.scene.yabee_settings
-        xfile=os.path.split(self.filepath)[0]+os.sep+bpy.context.selected_objects[0].name+".egg"
+        xfile=os.path.split(self.filepath)[0]+os.sep+bpy.context.selected_objects[0].name+sett.opt_suffix+".egg"
         print(">>>>>>",xfile,"\n\n\n")
         errors = egg_writer.write_out(xfile, 
                             sett.opt_anim_list.get_anim_dict(),
