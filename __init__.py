@@ -2,22 +2,23 @@
 """
 
 bl_info = {
-    "name": "Panda3d EGG format",
-    "author": "Andrey (Ninth) Arbuzov",
+    "name": "Hikaru's Panda3d EGG format",
+    "author": "Forked:Juan (Hikaru) Mendoza, Original: Andrey (Ninth) Arbuzov",
     "blender": (2, 6, 0),
     "api": 41226,
     "location": "File > Import-Export",
-    "description": ("Export to Panda3D EGG: meshes, uvs, materials, textures, "
+    "description": ("Forked Export to Panda3D EGG: meshes, uvs, materials, textures, "
                     "armatures, animation and curves"),
     "warning": "May contain bugs. Make backup of your file before use.",
     "wiki_url": ("http://www.panda3d.org/forums/viewtopic.php?t=11441"),
-    "tracker_url": "yabee.googlecode.com",
+    "tracker_url": "https://github.com/hikaruAi/hikaYABEE",
     "category": "Import-Export"}
 
 import bpy
 from bpy_extras.io_utils import ExportHelper
 from bpy.props import *
 from .yabee_libs import egg_writer
+import os
 
 # --------------- Properties --------------------
 
@@ -344,16 +345,16 @@ class RemoveAnim(bpy.types.Operator):
 
 
 
-class ExportPanda3DEGG(bpy.types.Operator, ExportHelper):
+class ExportSelectedPanda3DEGG(bpy.types.Operator, ExportHelper):
     ''' Export selected to the Panda3D EGG format '''
-    bl_idname = "export.panda3d_egg"  
-    bl_label = "Export to Panda3D EGG"
+    bl_idname = "export.hika_panda3d_egg"  
+    bl_label = "Export selected object to Panda3D EGG"
 
     # ExportHelper mixin class uses this
     filename_ext = ".egg"
 
     filter_glob = StringProperty(
-            default="*.egg",
+            default="*this_dont_matter.egg",
             options={'HIDDEN'},
             )
 
@@ -366,7 +367,9 @@ class ExportPanda3DEGG(bpy.types.Operator, ExportHelper):
         import imp
         imp.reload(egg_writer)
         sett = context.scene.yabee_settings
-        errors = egg_writer.write_out(self.filepath, 
+        xfile=os.path.split(self.filepath)[0]+os.sep+bpy.context.selected_objects[0].name+".egg"
+        print(">>>>>>",xfile,"\n\n\n")
+        errors = egg_writer.write_out(xfile, 
                             sett.opt_anim_list.get_anim_dict(),
                             sett.opt_anims_from_actions,
                             sett.opt_export_uv_as_texture, 
